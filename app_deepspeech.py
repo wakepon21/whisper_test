@@ -165,10 +165,11 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 sound_chunk = sound_chunk.set_channels(1).set_frame_rate(
                     model.sampleRate()
                 )
-                buffer = np.array(sound_chunk.get_array_of_samples())
+#                buffer = np.array(sound_chunk.get_array_of_samples())
 #                stream.feedAudioContent(buffer)
 #                text = stream.intermediateDecode()
-                text = transcriber.transcribe(buffer)["text"]
+                text = transcriber.transcribe(sound_chunk)
+                text = text["text"]
                 text_output.markdown(f"**Text:** {text}")
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
