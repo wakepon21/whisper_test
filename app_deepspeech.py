@@ -12,6 +12,7 @@ import av
 import numpy as np
 import pydub
 import streamlit as st
+import whisper
 
 from streamlit_webrtc import WebRtcMode, webrtc_streamer
 
@@ -85,6 +86,8 @@ trained on American English is being served.
     MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.pbmm"
     LANG_MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.scorer"
 
+    WHISPER_MODEL_URL = "https://github.com/openai/whisper.git"
+
     download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
     download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
 
@@ -128,6 +131,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
         if webrtc_ctx.audio_receiver:
             if stream is None:
                 from deepspeech import Model
+                transcriber = whisper.load_model("small")
 
                 model = Model(model_path)
                 model.enableExternalScorer(lm_path)
@@ -162,8 +166,9 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                     model.sampleRate()
                 )
                 buffer = np.array(sound_chunk.get_array_of_samples())
-                stream.feedAudioContent(buffer)
-                text = stream.intermediateDecode()
+#                stream.feedAudioContent(buffer)
+#                text = stream.intermediateDecode()
+                text = transcriber.transcribe(buffer)["text"]
                 text_output.markdown(f"**Text:** {text}")
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
