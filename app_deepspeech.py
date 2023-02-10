@@ -169,7 +169,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 #                stream.feedAudioContent(buffer)
 #                text = stream.intermediateDecode()
                 text_output.markdown(f"**buffer:** {buffer}")
-                text = transcriber.transcribe(buffer)
+                text = transcriber.transcribe(buffer, fp16=False)
                 text = text["text"]
                 text_output.markdown(f"**Text:** {text}")
         else:
