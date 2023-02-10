@@ -168,7 +168,8 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 #                buffer = np.array(sound_chunk.get_array_of_samples())
 #                stream.feedAudioContent(buffer)
 #                text = stream.intermediateDecode()
-                text = transcriber.transcribe(sound_chunk)
+                text_output.markdown(f"**buffer:** {buffer}")
+                text = transcriber.transcribe(buffer)
                 text = text["text"]
                 text_output.markdown(f"**Text:** {text}")
         else:
