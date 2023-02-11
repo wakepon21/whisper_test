@@ -126,6 +126,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
     status_indicator.write("Loading...")
     text_output = st.empty()
     stream = None
+    options = whisper.DecodingOptions()
 
     while True:
         if webrtc_ctx.audio_receiver:
@@ -168,10 +169,16 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 buffer = np.array(sound_chunk.get_array_of_samples()).astype(np.float32)
 #                stream.feedAudioContent(buffer)
 #                text = stream.intermediateDecode()
-                text_output.markdown(f"**buffer:** {buffer}len{len(buffer)}")
-                text = transcriber.transcribe(buffer, fp16=False)
-                text = text["text"]
-                text_output.markdown(f"**Text:** {text}")
+                audio = whisper.pad_or_trim(buffer)
+                mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
+                _, probs = transcriber.detect_language(mel)
+                result = whisper.decode(transcriber, mel, options)
+
+
+#                text_output.markdown(f"**buffer:** {buffer}len{len(buffer)}")
+#                text = transcriber.transcribe(buffer, fp16=False)
+#                text = text["text"]
+                text_output.markdown(f"**Text:** {result.text}")
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
             break
