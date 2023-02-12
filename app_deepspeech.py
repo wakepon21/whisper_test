@@ -180,12 +180,14 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 
 
                 torch_audio = torch.from_numpy(np.frombuffer(buffer, np.int16).flatten().astype(np.float32) / 32768.0)
-#                audio = whisper.pad_or_trim(buffer.astype(np.float32))
+                torch_audio = whisper.pad_or_trim(torch_audio)
 #                mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
 #                _, probs = transcriber.detect_language(mel)
 #                result = whisper.decode(transcriber, mel, options)
                 torch_text = transcriber.transcribe(torch_audio, fp16=False)
-                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
+#                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
+                text_output.markdown(f"**audio:** {torch_text}")
+
 
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
