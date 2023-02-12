@@ -170,7 +170,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 stream.feedAudioContent(buffer)
                 text = stream.intermediateDecode()
                 text_output.markdown(f"**Text:** {text}")
-
+                """
                 audio = whisper.pad_or_trim(buffer.astype(np.float32))[:1000]
                 mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
                 _, probs = transcriber.detect_language(mel)
@@ -178,6 +178,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 text = transcriber.transcribe(audio, fp16=False)
                 text = text["text"]
                 text_output.markdown(f"**audio:** {text}")
+                """
 
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
