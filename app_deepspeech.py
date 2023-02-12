@@ -176,9 +176,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 channel_count = sound_chunk.channels
                 frames_per_second = sound_chunk.frame_rate
                 duration = sound_chunk.duration_seconds
-                text_output.markdown(f"**channel_count:** {channel_count}")
-                text_output.markdown(f"**frames_per_second:** {frames_per_second}")
-                text_output.markdown(f"**duration:** {duration}")
+                text_output.markdown(f"**channel_count:** {channel_count},**frames_per_second:** {frames_per_second},**duration:** {duration}")
 
 
                 """
