@@ -127,6 +127,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
     text_output = st.empty()
     stream = None
     options = whisper.DecodingOptions()
+    transcriber = whisper.load_model("small")
 
     while True:
         if webrtc_ctx.audio_receiver:
@@ -171,8 +172,16 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 stream.feedAudioContent(buffer)
                 text = stream.intermediateDecode()
                 text_output.markdown(f"**Text:** {text}")
-                
-                transcriber = whisper.load_model("small")
+
+                channel_count = sound_chunk.channels
+                frames_per_second = sound_chunk.frame_rate
+                duration = sound_chunk.duration_seconds
+                text_output.markdown(f"**channel_count:** {channel_count}")
+                text_output.markdown(f"**frames_per_second:** {frames_per_second}")
+                text_output.markdown(f"**duration:** {duration}")
+
+
+                """
                 audio = whisper.pad_or_trim(buffer.astype(np.float32))
                 mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
                 _, probs = transcriber.detect_language(mel)
@@ -180,6 +189,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 text = transcriber.transcribe(audio, fp16=False)
                 text = text["text"]
                 text_output.markdown(f"**audio:** {text}")
+                """
 
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
