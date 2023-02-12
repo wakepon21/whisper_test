@@ -132,7 +132,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
         if webrtc_ctx.audio_receiver:
             if stream is None:
                 from deepspeech import Model
-                transcriber = whisper.load_model("small")
+
 
                 model = Model(model_path)
                 model.enableExternalScorer(lm_path)
@@ -166,19 +166,20 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 sound_chunk = sound_chunk.set_channels(1).set_frame_rate(
                     model.sampleRate()
                 )
+
                 buffer = np.array(sound_chunk.get_array_of_samples())
                 stream.feedAudioContent(buffer)
                 text = stream.intermediateDecode()
                 text_output.markdown(f"**Text:** {text}")
-                """
-                audio = whisper.pad_or_trim(buffer.astype(np.float32))[:1000]
+                
+                transcriber = whisper.load_model("small")
+                audio = whisper.pad_or_trim(buffer.astype(np.float32))
                 mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
                 _, probs = transcriber.detect_language(mel)
                 result = whisper.decode(transcriber, mel, options)
                 text = transcriber.transcribe(audio, fp16=False)
                 text = text["text"]
                 text_output.markdown(f"**audio:** {text}")
-                """
 
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
