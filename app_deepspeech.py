@@ -166,21 +166,19 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 sound_chunk = sound_chunk.set_channels(1).set_frame_rate(
                     model.sampleRate()
                 )
-                buffer = np.array(sound_chunk.get_array_of_samples()).astype(np.float32)
-                audio = whisper.pad_or_trim(buffer)
+                buffer = np.array(sound_chunk.get_array_of_samples())
+                stream.feedAudioContent(buffer)
+                text = stream.intermediateDecode()
+                text_output.markdown(f"**Text:** {text}")
 
-#                stream.feedAudioContent(buffer)
-#                text = stream.intermediateDecode()
-                """                
+                audio = whisper.pad_or_trim(buffer.astype(np.float32))[:1000]
                 mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
                 _, probs = transcriber.detect_language(mel)
                 result = whisper.decode(transcriber, mel, options)
-                """
-
-                text_output.markdown(f"**audio:** {audio}len{len(audio)}")
-                text = transcriber.transcribe(audio[:1000], fp16=False)
+                text = transcriber.transcribe(audio, fp16=False)
                 text = text["text"]
-                text_output.markdown(f"**Text:** {text}")
+                text_output.markdown(f"**audio:** {text}")
+
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
             break
