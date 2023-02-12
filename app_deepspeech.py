@@ -13,6 +13,7 @@ import numpy as np
 import pydub
 import streamlit as st
 import whisper
+import torch
 
 from streamlit_webrtc import WebRtcMode, webrtc_streamer
 
@@ -171,23 +172,20 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 buffer = np.array(sound_chunk.get_array_of_samples())
                 stream.feedAudioContent(buffer)
                 text = stream.intermediateDecode()
-                text_output.markdown(f"**Text:** {text}")
+#                text_output.markdown(f"**Text:** {text}")
 
                 channel_count = sound_chunk.channels
                 frames_per_second = sound_chunk.frame_rate
                 duration = sound_chunk.duration_seconds
-                text_output.markdown(f"**channel_count:** {channel_count},**frames_per_second:** {frames_per_second},**duration:** {duration}")
 
 
-                """
-                audio = whisper.pad_or_trim(buffer.astype(np.float32))
-                mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
-                _, probs = transcriber.detect_language(mel)
-                result = whisper.decode(transcriber, mel, options)
-                text = transcriber.transcribe(audio, fp16=False)
-                text = text["text"]
-                text_output.markdown(f"**audio:** {text}")
-                """
+                torch_audio = torch.from_numpy(np.frombuffer(buffer, np.int16).flatten().astype(np.float32) / 32768.0)
+#                audio = whisper.pad_or_trim(buffer.astype(np.float32))
+#                mel = whisper.log_mel_spectrogram(audio).to(transcriber.device)
+#                _, probs = transcriber.detect_language(mel)
+#                result = whisper.decode(transcriber, mel, options)
+                torch_text = transcriber.transcribe(torch_audio, fp16=False)
+                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
 
         else:
             status_indicator.write("AudioReciver is not set. Abort.")
