@@ -179,8 +179,9 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 duration = sound_chunk.duration_seconds
 
 
-                torch_audio = torch.from_numpy(np.frombuffer(buffer, np.int16).flatten().astype(np.float32) / 32768.0)
-#                torch_audio = whisper.pad_or_trim(torch_audio)
+                #torch_audio = torch.from_numpy(np.frombuffer(buffer, np.int16).flatten().astype(np.float32) / 32768.0)
+                
+                torch_audio = whisper.pad_or_trim(buffer)
 #                mel = whisper.log_mel_spectrogram(torch_audio).to(transcriber.device)
 #                _, probs = transcriber.detect_language(mel)
 #                options = whisper.DecodingOptions(fp16 = False)
