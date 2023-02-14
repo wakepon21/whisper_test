@@ -170,6 +170,8 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 )
 
                 buffer = np.array(sound_chunk.get_array_of_samples())
+                buffer_array = np.array(sound_chunk.get_array_of_samples(), dtype = 'float32')
+                
                 stream.feedAudioContent(buffer)
                 text = stream.intermediateDecode()
 #                text_output.markdown(f"**Text:** {text}")
@@ -180,7 +182,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 
 
                 #torch_audio = torch.from_numpy(np.frombuffer(buffer, np.int16).flatten().astype(np.float32) / 32768.0)
-                np_audio = np.frombuffer(buffer, np.float32)
+#                np_audio = np.frombuffer(buffer, np.float32)
 #                np_audio = whisper.pad_or_trim(np_audio)
 #                mel = whisper.log_mel_spectrogram(torch_audio).to(transcriber.device)
 #                _, probs = transcriber.detect_language(mel)
@@ -189,7 +191,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 #                torch_text = transcriber.transcribe(np_audio, verbose=True, fp16=False,language='japanese')
 #                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
 #                text_output.markdown(f"**audio:** {torch_text['text']} deep:{text}")
-                text_output.markdown(f"**buffer:** {buffer} ")
+                text_output.markdown(f"**buffer:** {buffer_array} ")
 
 
         else:
