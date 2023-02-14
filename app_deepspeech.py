@@ -189,7 +189,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
 #                torch_text = transcriber.transcribe(np_audio, verbose=True, fp16=False,language='japanese')
 #                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
 #                text_output.markdown(f"**audio:** {torch_text['text']} deep:{text}")
-                text_output.markdown(f"**audio:** {np_audio} ")
+                text_output.markdown(f"**audio:** {len(np_audio),type(np_audio)} ")
 
 
         else:
