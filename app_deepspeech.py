@@ -191,7 +191,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
                 torch_text = transcriber.transcribe(buffer_array, verbose=True, fp16=False)
 #                text_output.markdown(f"**audio:** {torch_text.text},**Text:** {text}")
 #                text_output.markdown(f"**audio:** {torch_text['text']} deep:{text}")
-                text_output.markdown(f"**buffer:** {torch_text} ")
+                text_output.markdown(f"**buffer:** {max(buffer)} ")
 
 
         else:
